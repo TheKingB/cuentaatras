@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cuenta regresiva — 15 de noviembre, 12:00</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #fbf9f6;
+      --ink: #1a1a1a;
+      --muted: #6b6b6b;
+      --shadow: rgba(0,0,0,.08);
+      --ring: rgba(0,0,0,.06);
+      --accent: #c49b66;
+    }
+    *{ box-sizing:border-box }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: radial-gradient(1600px 800px at 10% 10%, #ffffff 0%, var(--bg) 45%, #f7f3ee 100%);
+      color:var(--ink);
+      font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      display:grid;
+      place-items:center;
+    }
+    .wrap{ width:min(1100px, 90vw); margin:auto; }
+    .grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:min(8vw, 64px); align-items:end; justify-items:center; }
+    .unit{ text-align:center; }
+    .value{
+      font-family:"Cormorant Garamond", serif;
+      font-variant-numeric: tabular-nums;
+      font-weight:600;
+      font-size: clamp(60px, 14vw, 160px);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      position:relative;
+      text-shadow: 0 6px 18px var(--shadow);
+    }
+    .value::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-18px;
+      width:62px;
+      height:2px;
+      transform:translateX(-50%);
+      background: linear-gradient(90deg, transparent, #cfcfcf, transparent);
+      opacity:.9;
+    }
+    .label{
+      margin-top:26px;
+      font-size:14px;
+      letter-spacing:.35em;
+      color:var(--muted);
+    }
+
+    /* Help button ( ? ) */
+    .help{
+      position:fixed;
+      top:18px;
+      right:18px;
+      width:54px; height:54px;
+      display:grid; place-items:center;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #f3ece4 100%);
+      box-shadow: 0 10px 30px var(--shadow), inset 0 0 0 1px var(--ring);
+      cursor:pointer;
+      user-select:none;
+      transition: all .3s ease;
+      font-family:"Inter", system-ui;
+      font-weight:700;
+      font-size:20px;
+      color:var(--ink);
+      animation: pulse 3s infinite;
+    }
+    .help:hover{
+      transform: translateY(-2px) scale(1.08) rotate(6deg);
+      background: radial-gradient(circle at 25% 25%, #fff 0%, var(--accent) 100%);
+      color:#fff;
+      box-shadow: 0 12px 40px rgba(0,0,0,.15);
+    }
+    .help:active{ transform: scale(.96); }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(196,155,102,0.5); }
+      50% { box-shadow: 0 0 0 12px rgba(196,155,102,0); }
+    }
+
+    dialog{
+      border:none; border-radius:18px; box-shadow: 0 30px 80px rgba(0,0,0,.18);
+      max-width:min(680px, 92vw); padding:28px 28px 22px; font-size:18px; line-height:1.5;
+    }
+    dialog::backdrop{ background: rgba(0,0,0,.22) }
+    .close{ position:absolute; top:10px; right:12px; border:none; background:transparent; font-size:26px; cursor:pointer; }
+
+    .done{ text-align:center; margin-top:12px; color:var(--muted); font-weight:600 }
+    @media (max-width:700px){ .grid{ gap: 24px } .value{ font-size: clamp(54px, 18vw, 120px) } }
+  </style>
+</head>
+<body>
+  <button class="help" aria-label="Ayuda" title="Ayuda">?</button>
+  <audio id="clickSound" src="yaaaaa.mp3" preload="auto"></audio>
+
+  <div class="wrap">
+    <div id="countdown" class="grid" role="timer" aria-live="polite">
+      <div class="unit"><div id="d" class="value">00</div><div class="label">DAYS</div></div>
+      <div class="unit"><div id="h" class="value">00</div><div class="label">HOURS</div></div>
+      <div class="unit"><div id="m" class="value">00</div><div class="label">MINUTES</div></div>
+      <div class="unit"><div id="s" class="value">00</div><div class="label">SECONDS</div></div>
+    </div>
+    <div id="done" class="done" hidden>¡Llegó el momento!</div>
+  </div>
+
+  <dialog id="modal">
+    <button class="close" aria-label="Cerrar" onclick="modal.close()">×</button>
+    <p>
+      Es muuuuuy importante que, a partir de este mismo momento, entiendas lo importante que es esta página para el transcurso de los próximos días. Nos vemos pronto
+    </p>
+  </dialog>
+
+  <script>
+    function getTargetDate(){
+      const now = new Date();
+      let year = now.getFullYear();
+      const target = new Date(year, 10, 15, 12, 0, 0, 0);
+      if (now > target) return new Date(year + 1, 10, 15, 12, 0, 0, 0);
+      return target;
+    }
+
+    const targetDate = getTargetDate();
+    const $d = document.getElementById('d');
+    const $h = document.getElementById('h');
+    const $m = document.getElementById('m');
+    const $s = document.getElementById('s');
+    const $done = document.getElementById('done');
+
+    function pad(n, len=2){ return String(n).padStart(len, '0'); }
+
+    function render(){
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0){
+        $d.textContent='00';$h.textContent='00';$m.textContent='00';$s.textContent='00';$done.hidden=false;return 'done';
+      }
+      const seconds=Math.floor(diff/1000)%60;const minutes=Math.floor(diff/1000/60)%60;const hours=Math.floor(diff/1000/60/60)%24;const days=Math.floor(diff/1000/60/60/24);
+      $d.textContent=pad(days,Math.max(2,String(days).length));$h.textContent=pad(hours);$m.textContent=pad(minutes);$s.textContent=pad(seconds);
+    }
+
+    function tick(){const status=render();if(status==='done')return;const ms=1000-(Date.now()%1000);setTimeout(tick,ms+5);}tick();
+
+    const btn=document.querySelector('.help');
+    const modal=document.getElementById('modal');
+    const audio=document.getElementById('clickSound');
+
+    btn.addEventListener('click',()=>{
+      modal.showModal();
+      audio.currentTime=0;
+      audio.play().catch(()=>{});
+    });
+
+    document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&modal.open)modal.close();});
+  </script>
+</body>
+</html>
