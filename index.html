@@ -7,183 +7,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg: #fbf9f6;
-      --ink: #1a1a1a;
-      --muted: #6b6b6b;
-      --accent: #c49b66;
-      --shadow: rgba(0,0,0,.08);
+      --bg: #fbf9f6; --ink: #1a1a1a; --muted: #6b6b6b; --accent: #c49b66; --shadow: rgba(0,0,0,.08);
     }
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; margin:0; }
+    *{ box-sizing:border-box }
+    html,body{ height:100%; margin:0 }
     body{
       background: radial-gradient(circle at 10% 10%, #ffffff 0%, var(--bg) 40%, #f7f3ee 100%);
       color:var(--ink);
       font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      display:grid;
-      place-items:center;
+      display:grid; place-items:center;
     }
 
-    .wrap{ width:min(1100px, 90vw); }
-    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:min(8vw,64px); align-items:end; justify-items:center; }
-    .unit{ text-align:center; }
-    .value{
-      font-family:"Cormorant Garamond", serif;
-      font-weight:600;
-      font-size: clamp(60px, 14vw, 160px);
-      line-height: 1;
-      text-shadow: 0 6px 18px var(--shadow);
-    }
-    .label{ margin-top:20px; font-size:14px; letter-spacing:.3em; color:var(--muted); }
+    /* ===== Main countdown ===== */
+    .wrap{ width:min(1100px, 90vw) }
+    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:min(8vw,64px); align-items:end; justify-items:center }
+    .unit{ text-align:center }
+    .value{ font-family:"Cormorant Garamond", serif; font-weight:600; font-size: clamp(60px, 14vw, 160px); line-height:1; text-shadow:0 6px 18px var(--shadow) }
+    .label{ margin-top:20px; font-size:14px; letter-spacing:.3em; color:var(--muted) }
 
-    .help{
-      position:fixed; top:20px; right:20px;
-      width:60px; height:60px;
-      border:none;
-      background:transparent;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      transition:transform .2s ease;
-    }
-    .help:hover{ transform:scale(1.1) rotate(3deg); }
+    /* ===== Icon buttons + badges ===== */
+    .help{ position:fixed; top:20px; right:20px; width:60px; height:60px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s ease }
+    .help.left{ left:20px; right:auto }
+    .help:hover{ transform:scale(1.07) rotate(2deg) }
+    .help img{ width:50px; height:50px; object-fit:contain; filter: drop-shadow(2px 2px 0 #0003) }
+    .help-number{ position:absolute; bottom:0; right:0; background:#ff5b5b; color:#fff; font-size:14px; font-weight:700; width:22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 0 rgba(255,91,91,.8); animation: badgePulse 1.6s ease-in-out infinite }
+    /* ocultar badge del botón derecho */
+    .help:not(.left) .help-number{ display:none }
+    @keyframes badgePulse{ 0%{transform:scale(1); box-shadow:0 0 0 0 rgba(255,91,91,.6)} 70%{transform:scale(1.08); box-shadow:0 0 0 10px rgba(255,91,91,0)} 100%{transform:scale(1); box-shadow:0 0 0 0 rgba(255,91,91,0)} }
 
-    .help img{
-      width:50px;
-      height:50px;
-      object-fit:contain;
-      filter: drop-shadow(2px 2px 0 #0003);
-    }
+    /* ===== Modals (retro window style) ===== */
+    dialog{ border:2px solid #000; border-radius:10px; box-shadow:8px 8px 0 #000; background:#fff; max-width:600px; text-align:left; padding:0; animation:pop .3s ease forwards; overflow:hidden }
+    @keyframes pop{ from{opacity:0; transform:translateY(20px) scale(.95)} to{opacity:1; transform:translateY(0) scale(1)} }
+    dialog::backdrop{ background:rgba(0,0,0,.3); backdrop-filter:blur(3px) }
+    .dialog-header{ background:#fff9a3; border-bottom:2px solid #000; padding:10px; display:flex; justify-content:space-between; align-items:center }
+    .dialog-header .dots{ display:flex; gap:5px }
+    .dialog-header .dot{ width:12px; height:12px; border-radius:50%; border:2px solid #000; background:#fff }
+    .close-btn{ background:#000; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:600 }
+    .dialog-body{ padding:30px 32px; font-size:18px; line-height:1.8; color:#222; text-align:center }
 
-    .help-number{
-      position:absolute;
-      bottom:0;
-      right:0;
-      background:#ff5b5b;
-      color:#fff;
-      font-size:14px;
-      font-weight:700;
-      width:22px;
-      height:22px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:50%;
-      border:2px solid #fff;
-      box-shadow:0 0 0 0 rgba(255,91,91,.8);
-      animation: badgePulse 1.6s ease-in-out infinite;
-    }
+    /* ===== Mini counters ===== */
+    .mini-count{ position:fixed; top:20px; right:90px; display:flex; gap:8px; align-items:baseline; background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:10px; padding:8px 10px; box-shadow:0 6px 18px rgba(0,0,0,.08); transition: background .3s, color .3s, box-shadow .3s }
+    .mini-count.left{ left:90px; right:auto }
+    .mini-count.soon{ background:#ff5b5b; color:#fff; box-shadow:0 0 20px rgba(255,91,91,.6); border-color:#ff5b5b }
+    .mini-val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:18px }
+    .mini-label{ font-size:10px; letter-spacing:.14em; color:#6b6b6b; display:block; text-align:center; margin-top:2px }
+    .mini-count.soon .mini-label{ color:#fff }
+    .mini-block{ text-align:center; min-width:40px }
 
-    @keyframes badgePulse {
-      0% { transform: scale(1); box-shadow:0 0 0 0 rgba(255,91,91,.6); }
-      70%{ transform: scale(1.08); box-shadow:0 0 0 10px rgba(255,91,91,0); }
-      100%{ transform: scale(1); box-shadow:0 0 0 0 rgba(255,91,91,0); }
-    }
-
-    dialog{
-      border: 2px solid #000;
-      border-radius: 10px;
-      box-shadow: 8px 8px 0 #000;
-      background: #fff;
-      max-width: 600px;
-      text-align: left;
-      padding: 0;
-      animation: pop .3s ease forwards;
-      overflow: hidden;
-    }
-
-    @keyframes pop { from{opacity:0; transform:translateY(20px) scale(0.95);} to{opacity:1; transform:translateY(0) scale(1);} }
-
-    dialog::backdrop {
-      background: rgba(0,0,0,.3);
-      backdrop-filter: blur(3px);
-    }
-
-    .dialog-header {
-      background: #fff9a3;
-      border-bottom: 2px solid #000;
-      padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .dialog-header .dots {
-      display: flex;
-      gap: 5px;
-    }
-
-    .dialog-header .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 2px solid #000;
-      background: #fff;
-    }
-
-    .close-btn {
-      background: #000;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background .2s ease;
-    }
-    .close-btn:hover { background: #333; }
-
-    .dialog-body {
-      padding: 30px 32px;
-      font-size: 18px;
-      line-height: 1.8;
-      color: #222;
-      text-align: center;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* Mini contador (8 de noviembre, 12:00) */
-    .mini-count{
-      position:fixed; top:20px; right:90px;
-      display:flex; gap:8px; align-items:baseline;
-      background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:10px;
-      padding:8px 10px; box-shadow:0 6px 18px rgba(0,0,0,.08);
-      font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
-    }
-    .mini-count.soon {
-      background:#ff5b5b;
-      color:#fff;
-      box-shadow:0 0 20px rgba(255,91,91,0.6);
-      border-color:#ff5b5b;
-    }
-    .mini-val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:18px; }
-    .mini-label{ font-size:10px; letter-spacing:.14em; color:#6b6b6b; display:block; text-align:center; margin-top:2px; }
-    .mini-count.soon .mini-label{ color:#fff; }
-    .mini-block{ text-align:center; min-width:40px; }
-      /* ===== Responsive ===== */
-    @media (max-width: 820px){
-      .wrap{ width:min(1100px, 96vw); }
-      .grid{ gap: min(5vw, 28px); }
-      .label{ font-size:12px; letter-spacing:.25em; }
-    }
+    /* ===== Responsive ===== */
     @media (max-width: 560px){
-      body{ place-items:center; }
-      .grid{ grid-template-columns: repeat(4, 1fr); gap: 12px; }
-      .value{ font-size: clamp(34px, 18vw, 120px); }
-      .label{ font-size:10px; letter-spacing:.22em; }
-      .help{ top:12px; right:12px; width:50px; height:50px; }
-      .help img{ width:40px; height:40px; }
-      .help-number{ transform: translate(2px,2px); width:20px; height:20px; font-size:12px; }
-      .mini-count{ top:12px; right:68px; padding:6px 8px; gap:6px; }
-      .mini-val{ font-size:16px; }
-      .mini-block{ min-width:34px; }
-      dialog{ max-width:92vw; }
+      .grid{ gap:12px }
+      .value{ font-size: clamp(34px, 18vw, 120px) }
+      .label{ font-size:10px; letter-spacing:.22em }
+      .help{ top:12px; right:12px; width:50px; height:50px }
+      .help.left{ left:12px }
+      .help img{ width:40px; height:40px }
+      .help-number{ width:20px; height:20px; font-size:12px }
+      .mini-count{ top:12px; right:66px; padding:6px 8px; gap:6px }
+      .mini-count.left{ left:66px }
+      .mini-val{ font-size:16px }
+      .mini-block{ min-width:34px }
+      dialog{ max-width:92vw }
     }
   </style>
 </head>
 <body>
-  <div class="mini-count" aria-label="Cuenta atrás 8 de noviembre">
+  <!-- Izquierda -->
+  <div class="mini-count left" aria-label="Cuenta atrás Miércoles">
+    <div class="mini-block"><div id="d3" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
+    <div class="mini-block"><div id="h3" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
+    <div class="mini-block"><div id="m3" class="mini-val">00</div><span class="mini-label">MIN</span></div>
+    <div class="mini-block"><div id="s3" class="mini-val">00</div><span class="mini-label">SEG</span></div>
+  </div>
+  <button class="help left" title="Misión">
+    <img src="notificacion.png" alt="Icono de documento" />
+    <span class="help-number">1</span>
+  </button>
+
+  <!-- Derecha -->
+  <div class="mini-count" aria-label="Cuenta atrás 8 de noviembre 2025">
     <div class="mini-block"><div id="d2" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
     <div class="mini-block"><div id="h2" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
     <div class="mini-block"><div id="m2" class="mini-val">00</div><span class="mini-label">MIN</span></div>
@@ -191,12 +93,12 @@
   </div>
   <button class="help" title="Ayuda">
     <img src="notificacion.png" alt="Icono de documento" />
-    <span class="help-number">1</span>
   </button>
+
   <audio id="clickSound" src="yaaaaa.mp3" preload="auto"></audio>
 
   <div class="wrap">
-    <div id="countdown" class="grid">
+    <div id="countdown" class="grid" role="timer" aria-live="polite">
       <div class="unit"><div id="d" class="value">00</div><div class="label">DÍAS</div></div>
       <div class="unit"><div id="h" class="value">00</div><div class="label">HORAS</div></div>
       <div class="unit"><div id="m" class="value">00</div><div class="label">MINUTOS</div></div>
@@ -204,13 +106,26 @@
     </div>
   </div>
 
+  <!-- Modal misión (izquierda) -->
+  <dialog id="modal-mision">
+    <div class="dialog-header">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <div style="font-weight:600;">Mensaje</div>
+      <button class="close-btn" onclick="modalMision.close()">Cerrar</button>
+    </div>
+    <div class="dialog-body">
+      ¡Bienvenida de nuevo! Que estés aquí ahora mismo quiere decir que estás haciendo las cosas bien, y has entendido lo importante que es esta página. Ahora tengo una misión para ti.<br><br>
+      Voy a necesitar que prepares:<br>
+      - DOS outfits (MUY importante que el mejor sea de noche)<br>
+      - UN (o dos) BAÑADOR (importante: NO bikini, bañador).<br><br>
+      Pronto volverás a saber de mi. Sigue atenta.
+    </div>
+  </dialog>
+
+  <!-- Modal derecha -->
   <dialog id="modal">
     <div class="dialog-header">
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       <div style="font-weight:600;">Mensaje</div>
       <button class="close-btn" onclick="modal.close()">Cerrar</button>
     </div>
@@ -220,16 +135,30 @@
   </dialog>
 
   <script>
+    /* ===== Targets ===== */
     function getTargetDate(){
       const now = new Date();
-      let year = now.getFullYear();
-      const target = new Date(year, 10, 15, 12, 0, 0, 0);
-      if (now > target) return new Date(year + 1, 10, 15, 12, 0, 0, 0);
-      return target;
+      const year = now.getFullYear();
+      const target = new Date(year, 10, 15, 12, 0, 0, 0); // 15 nov, 12:00
+      return now > target ? new Date(year + 1, 10, 15, 12, 0, 0, 0) : target;
     }
-
     const targetDate = getTargetDate();
-    const targetDate2 = new Date(2025, 10, 8, 12, 0, 0, 0);
+    const targetDate2 = new Date(2025, 10, 8, 12, 0, 0, 0); // 8 nov 2025 12:00
+    function getNextWednesdayNoon(){
+      const now = new Date();
+      const WED = 3; // 0 Dom ... 3 Mié
+      const deltaBase = (WED - now.getDay() + 7) % 7;
+      let delta = deltaBase;
+      const afterNoon = now.getHours() > 12 || (now.getHours() === 12 && (now.getMinutes() > 0 || now.getSeconds() > 0));
+      if (delta === 0 && afterNoon) delta = 7;
+      const res = new Date(now);
+      res.setDate(now.getDate() + delta);
+      res.setHours(12,0,0,0);
+      return res;
+    }
+    const targetDate3 = getNextWednesdayNoon();
+
+    /* ===== Elements ===== */
     const $d = document.getElementById('d');
     const $h = document.getElementById('h');
     const $m = document.getElementById('m');
@@ -238,58 +167,48 @@
     const $h2 = document.getElementById('h2');
     const $m2 = document.getElementById('m2');
     const $s2 = document.getElementById('s2');
-    const miniCount = document.querySelector('.mini-count');
+    const $d3 = document.getElementById('d3');
+    const $h3 = document.getElementById('h3');
+    const $m3 = document.getElementById('m3');
+    const $s3 = document.getElementById('s3');
+    const miniRight = document.querySelector('.mini-count:not(.left)');
+    const miniLeft  = document.querySelector('.mini-count.left');
 
     function pad(n, len=2){ return String(n).padStart(len, '0'); }
 
-    function render(){
-      const now = new Date();
-      const diff = targetDate - now;
-      if (diff <= 0){ $d.textContent='00';$h.textContent='00';$m.textContent='00';$s.textContent='00'; }
-      else{
-        const seconds=Math.floor(diff/1000)%60;
-        const minutes=Math.floor(diff/1000/60)%60;
-        const hours=Math.floor(diff/1000/60/60)%24;
-        const days=Math.floor(diff/1000/60/60/24);
-        $d.textContent=pad(days,Math.max(2,String(days).length));
-        $h.textContent=pad(hours);
-        $m.textContent=pad(minutes);
-        $s.textContent=pad(seconds);
-      }
-      // Mini contador (8 de noviembre, 12:00)
-      const diff2 = targetDate2 - now;
-      if (diff2 <= 0){ $d2.textContent='00';$h2.textContent='00';$m2.textContent='00';$s2.textContent='00'; miniCount.classList.remove('soon'); }
-      else{
-        const s2=Math.floor(diff2/1000)%60;
-        const m2=Math.floor(diff2/1000/60)%60;
-        const h2=Math.floor(diff2/1000/60/60)%24;
-        const d2=Math.floor(diff2/1000/60/60/24);
-        $d2.textContent=pad(d2, Math.max(2,String(d2).length));
-        $h2.textContent=pad(h2);
-        $m2.textContent=pad(m2);
-        $s2.textContent=pad(s2);
-        // Cambia color si faltan menos de 24h
-        if (diff2 < 24*60*60*1000) {
-          miniCount.classList.add('soon');
-        } else {
-          miniCount.classList.remove('soon');
-        }
-      }
+    function updateBlock(diff, els, miniBox){
+      if (diff <= 0){ els.d.textContent='00'; els.h.textContent='00'; els.m.textContent='00'; els.s.textContent='00'; if(miniBox) miniBox.classList.remove('soon'); return; }
+      const s = Math.floor(diff/1000)%60;
+      const m = Math.floor(diff/1000/60)%60;
+      const h = Math.floor(diff/1000/60/60)%24;
+      const d = Math.floor(diff/1000/60/60/24);
+      els.d.textContent = pad(d, Math.max(2, String(d).length));
+      els.h.textContent = pad(h);
+      els.m.textContent = pad(m);
+      els.s.textContent = pad(s);
+      if (miniBox){ if (diff < 24*60*60*1000) miniBox.classList.add('soon'); else miniBox.classList.remove('soon'); }
     }
 
-    function tick(){ render(); requestAnimationFrame(tick); }
+    function render(){
+      const now = new Date();
+      updateBlock(targetDate - now, {d:$d,h:$h,m:$m,s:$s});
+      updateBlock(targetDate2 - now, {d:$d2,h:$h2,m:$m2,s:$s2}, miniRight);
+      updateBlock(targetDate3 - now, {d:$d3,h:$h3,m:$m3,s:$s3}, miniLeft);
+    }
+
+    function tick(){ render(); const ms = 1000 - (Date.now()%1000); setTimeout(tick, ms+5) }
     tick();
 
-    const btn=document.querySelector('.help');
-    const modal=document.getElementById('modal');
-    const audio=document.getElementById('clickSound');
+    /* ===== Interactions ===== */
+    const btnRight = document.querySelector('.help:not(.left)');
+    const btnLeft  = document.querySelector('.help.left');
+    const modal = document.getElementById('modal');
+    const modalMision = document.getElementById('modal-mision');
+    const audio = document.getElementById('clickSound');
 
-    btn.addEventListener('click',()=>{
-      modal.showModal();
-      if(audio){ audio.currentTime = 0; audio.play().catch(()=>{}); }
-    });
-
-    document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&modal.open)modal.close();});
+    if (btnRight) btnRight.addEventListener('click', ()=>{ modal.showModal(); if(audio){ audio.currentTime=0; audio.play().catch(()=>{}) } });
+    if (btnLeft)  btnLeft.addEventListener('click',  ()=>{ modalMision.showModal(); if(audio){ audio.currentTime=0; audio.play().catch(()=>{}) } });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ if(modal.open) modal.close(); if(modalMision.open) modalMision.close(); } });
   </script>
 </body>
 </html>
