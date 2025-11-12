@@ -1,89 +1,120 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cuenta regresiva — 15 de noviembre, 12:00</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg: #fbf9f6; --ink: #1a1a1a; --muted: #6b6b6b; --accent: #c49b66; --shadow: rgba(0,0,0,.08);
-    }
+    :root{ --bg:#fbf9f6; --ink:#1a1a1a; --muted:#6b6b6b; --accent:#c49b66; --alert:#ff5b5b; --shadow:rgba(0,0,0,.08); }
     *{ box-sizing:border-box }
     html,body{ height:100%; margin:0 }
-    body{
-      background: radial-gradient(circle at 10% 10%, #ffffff 0%, var(--bg) 40%, #f7f3ee 100%);
-      color:var(--ink);
-      font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      display:grid; place-items:center;
-    }.wrap{ width:min(1100px, 90vw) }
-.grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:min(8vw,64px); align-items:end; justify-items:center }
-.unit{ text-align:center }
-.value{ font-family:"Cormorant Garamond", serif; font-weight:600; font-size: clamp(60px, 14vw, 160px); line-height:1; text-shadow:0 6px 18px var(--shadow) }
-.label{ margin-top:20px; font-size:14px; letter-spacing:.3em; color:var(--muted) }
+    body{ background: radial-gradient(circle at 10% 10%, #ffffff 0%, var(--bg) 40%, #f7f3ee 100%); color:var(--ink); font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; display:grid; place-items:center }
 
-.help{ position:fixed; top:20px; right:20px; width:60px; height:60px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s ease }
-.help.left{ left:20px; right:auto }
-.help:hover{ transform:scale(1.07) rotate(2deg) }
-.help img{ width:50px; height:50px; object-fit:contain; filter: drop-shadow(2px 2px 0 #0003) }
-.help-number{ position:absolute; bottom:0; right:0; background:#ff5b5b; color:#fff; font-size:14px; font-weight:700; width:22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 0 rgba(255,91,91,.8); animation: badgePulse 1.6s ease-in-out infinite }
-.help:not(.left) .help-number{ display:none }
-@keyframes badgePulse{ 0%{transform:scale(1); box-shadow:0 0 0 0 rgba(255,91,91,.6)} 70%{transform:scale(1.08); box-shadow:0 0 0 10px rgba(255,91,91,0)} 100%{transform:scale(1); box-shadow:0 0 0 0 rgba(255,91,91,0)} }
+    /* ===== Contador principal ===== */
+    .wrap{ width:min(1100px,90vw); text-align:center; }
+    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:min(8vw,64px); align-items:end; justify-items:center }
+    .unit{ text-align:center }
+    .value{ font-family:"Cormorant Garamond", serif; font-weight:600; font-size:clamp(60px,14vw,160px); line-height:1; text-shadow:0 6px 18px var(--shadow) }
+    .label{ margin-top:20px; font-size:14px; letter-spacing:.3em; color:var(--muted) }
 
-dialog{ border:2px solid #000; border-radius:10px; box-shadow:8px 8px 0 #000; background:#fff; max-width:600px; text-align:left; padding:0; animation:pop .3s ease forwards; overflow:hidden }
-@keyframes pop{ from{opacity:0; transform:translateY(20px) scale(.95)} to{opacity:1; transform:translateY(0) scale(1)} }
-dialog::backdrop{ background:rgba(0,0,0,.3); backdrop-filter:blur(3px) }
-.dialog-header{ background:#fff9a3; border-bottom:2px solid #000; padding:10px; display:flex; justify-content:space-between; align-items:center }
-.dialog-header .dots{ display:flex; gap:5px }
-.dialog-header .dot{ width:12px; height:12px; border-radius:50%; border:2px solid #000; background:#fff }
-.close-btn{ background:#000; color:#fff; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-weight:600 }
-.dialog-body{ padding:30px 32px; font-size:18px; line-height:1.8; color:#222; text-align:center }
+    /* ===== Iconos superiores (izq/dcha) ===== */
+    .help{ position:fixed; top:20px; right:20px; width:60px; height:60px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s ease }
+    .help.left{ left:20px; right:auto }
+    .help:hover{ transform:scale(1.07) rotate(2deg) }
+    .help img{ width:50px; height:50px; object-fit:contain; filter:drop-shadow(2px 2px 0 #0003) }
+    .help-number{ position:absolute; bottom:0; right:0; background:var(--alert); color:#fff; font-size:14px; font-weight:700; width:22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 0 rgba(255,91,91,.8); animation:badgePulse 1.6s ease-in-out infinite }
+    .help:not(.left) .help-number{ display:none }
+    @keyframes badgePulse{ 0%{transform:scale(1); box-shadow:0 0 0 0 rgba(255,91,91,.6)} 70%{transform:scale(1.08); box-shadow:0 0 0 10px rgba(255,91,91,0)} 100%{transform:scale(1); box-shadow:0 0 0 0 rgba(255,91,91,0)} }
 
-.mini-count{ position:fixed; top:20px; right:90px; display:flex; gap:8px; align-items:baseline; background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:10px; padding:8px 10px; box-shadow:0 6px 18px rgba(0,0,0,.08); transition: background .3s, color .3s, box-shadow .3s }
-.mini-count.left{ left:90px; right:auto }
-.mini-count.soon{ background:#ff5b5b; color:#fff; box-shadow:0 0 20px rgba(255,91,91,.6); border-color:#ff5b5b }
-.mini-val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:18px }
-.mini-label{ font-size:10px; letter-spacing:.14em; color:#6b6b6b; display:block; text-align:center; margin-top:2px }
-.mini-count.soon .mini-label{ color:#fff }
-.mini-block{ text-align:center; min-width:40px }
+    /* ===== Mini-contadores ===== */
+    .mini-count{ position:fixed; top:20px; right:90px; display:flex; gap:8px; align-items:baseline; background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:10px; padding:8px 10px; box-shadow:0 6px 18px rgba(0,0,0,.08); transition:background .3s, color .3s, box-shadow .3s }
+    .mini-count.left{ left:90px; right:auto }
+    .mini-count.soon{ background:var(--alert); color:#fff; box-shadow:0 0 20px rgba(255,91,91,.6); border-color:var(--alert) }
+    .mini-val{ font-weight:700; font-variant-numeric:tabular-nums; font-size:18px }
+    .mini-label{ font-size:10px; letter-spacing:.14em; color:#6b6b6b; display:block; text-align:center; margin-top:2px }
+    .mini-count.soon .mini-label{ color:#fff }
+    .mini-block{ text-align:center; min-width:40px }
 
-@media (max-width: 560px){
-  .grid{ gap:12px }
-  .value{ font-size: clamp(34px, 18vw, 120px) }
-  .label{ font-size:10px; letter-spacing:.22em }
-  .help{ width:50px; height:50px; top:12px }
-  .help img{ width:40px; height:40px }
-  .help-number{ width:20px; height:20px; font-size:12px }
-  .help.left{ left:12px; right:auto; top:12px; z-index:4 }
-  .mini-count.left{ left:66px; right:auto; top:12px; padding:6px 8px; gap:6px; z-index:3 }
-  .help:not(.left){ left:12px; right:auto; top:64px; z-index:4 }
-  .mini-count:not(.left){ left:66px; right:auto; top:64px; padding:6px 8px; gap:6px; z-index:3 }
-  .mini-val{ font-size:16px }
-  .mini-block{ min-width:34px }
-  dialog{ max-width:92vw }
-}
+    /* ===== Diálogos ===== */
+    dialog{ border:2px solid #000; border-radius:10px; box-shadow:8px 8px 0 #000; background:#fff; max-width:600px; text-align:left; padding:0; animation:pop .3s ease forwards; overflow:hidden }
+    @keyframes pop{ from{opacity:0; transform:translateY(20px) scale(.95)} to{opacity:1; transform:translateY(0) scale(1)} }
+    dialog::backdrop{ background:rgba(0,0,0,.3); backdrop-filter:blur(3px) }
+    .dialog-header{ background:#f8f8f8; border-bottom:1px solid #e9e9e9; padding:12px 16px; display:flex; justify-content:space-between; align-items:center }
+    .close-btn{ background:transparent; color:#000; border:none; border-radius:4px; cursor:pointer; font-size:20px; font-weight:700; line-height:1 }
+    .close-btn:hover{ color:var(--accent) }
+    .dialog-body{ padding:24px 26px; font-size:18px; line-height:1.7; color:#222; text-align:center }
 
+    /* ===== Botón MENÚ (cerradura 3 dígitos) ===== */
+    .menu-btn{ position:fixed; bottom:20px; right:20px; width:70px; height:70px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s ease }
+    .menu-btn:hover{ transform:scale(1.07) }
+    .menu-btn img{ width:60px; height:60px; object-fit:contain; filter:drop-shadow(2px 2px 0 #0003) }
+
+    /* ===== Cerradura minimal ===== */
+    #menuDialog{ border:none; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,.15); background:#fff; padding:0 }
+    #menuDialog .dialog-body{ padding-top:16px }
+    .tumbler-row{ display:flex; justify-content:center; gap:14px; margin:12px 0 16px }
+    .tumbler{ display:flex; flex-direction:column; align-items:center; background:#f2f2f2; border-radius:10px; padding:8px; width:60px; height:120px; justify-content:space-between }
+    .arrow{ cursor:pointer; font-size:18px; color:#555; user-select:none }
+    .arrow:hover{ color:var(--accent) }
+    .digit-window{ display:grid; place-items:center; width:42px; height:54px; border-radius:8px; background:#fff; box-shadow:inset 0 2px 5px rgba(0,0,0,.1) }
+    .digit{ font-size:22px; font-weight:700; color:#333 }
+    .lock-btn{ padding:8px 14px; border:none; border-radius:8px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer }
+    #lockFeedback{ margin-left:10px; color:var(--alert); font-weight:700; display:none }
+
+    /* ===== Responsive: evitar solapes ===== */
+    @media (max-width:560px){
+      .grid{ gap:12px }
+      .value{ font-size:clamp(34px,18vw,120px) }
+      .label{ font-size:10px; letter-spacing:.22em }
+      .help{ width:50px; height:50px; top:12px }
+      .help img{ width:40px; height:40px }
+      .help-number{ width:20px; height:20px; font-size:12px }
+      /* Izquierda arriba */
+      .help.left{ left:12px; right:auto; top:12px; z-index:4 }
+      .mini-count.left{ left:66px; right:auto; top:12px; padding:6px 8px; gap:6px; z-index:3 }
+      /* Derecha debajo */
+      .help:not(.left){ left:12px; right:auto; top:64px; z-index:4 }
+      .mini-count:not(.left){ left:66px; right:auto; top:64px; padding:6px 8px; gap:6px; z-index:3 }
+      dialog{ max-width:92vw }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Mini-contador IZQUIERDO + botón -->
   <div class="mini-count left" aria-label="Cuenta atrás Miércoles">
     <div class="mini-block"><div id="d3" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
     <div class="mini-block"><div id="h3" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
     <div class="mini-block"><div id="m3" class="mini-val">00</div><span class="mini-label">MIN</span></div>
     <div class="mini-block"><div id="s3" class="mini-val">00</div><span class="mini-label">SEG</span></div>
   </div>
-  <button class="help left" title="Misión">
+  <button class="help left" id="btn-left" title="Misión">
     <img src="notificacion.png" alt="Icono de documento" />
     <span class="help-number">1</span>
-  </button>  <div class="mini-count" aria-label="Cuenta atrás 8 de noviembre 2025">
+  </button>
+
+  <!-- Mini-contador DERECHO + botón -->
+  <div class="mini-count" aria-label="Cuenta atrás 8 de noviembre 2025">
     <div class="mini-block"><div id="d2" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
     <div class="mini-block"><div id="h2" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
     <div class="mini-block"><div id="m2" class="mini-val">00</div><span class="mini-label">MIN</span></div>
     <div class="mini-block"><div id="s2" class="mini-val">00</div><span class="mini-label">SEG</span></div>
   </div>
-  <button class="help" title="Ayuda">
+  <button class="help" id="btn-right" title="Ayuda">
     <img src="notificacion.png" alt="Icono de documento" />
-  </button><audio id="clickSound" src="yaaaaa.mp3" preload="auto"></audio> <audio id="clickSoundLeft" src="amime.mp3" preload="auto"></audio>
+  </button>
 
+  <!-- Botón MENÚ (cerradura 3 dígitos) -->
+  <button class="menu-btn" id="menuBtn" title="Abrir menú">
+    <img src="menu.png" alt="Icono menú" />
+  </button>
+
+  <!-- Audios -->
+  <audio id="audio-right" src="yaaaaa.mp3" preload="auto"></audio>
+  <audio id="audio-left"  src="amime.mp3"   preload="auto"></audio>
+
+  <!-- Contador principal centro -->
   <div class="wrap">
     <div id="countdown" class="grid" role="timer" aria-live="polite">
       <div class="unit"><div id="d" class="value">00</div><div class="label">DÍAS</div></div>
@@ -91,52 +122,155 @@ dialog::backdrop{ background:rgba(0,0,0,.3); backdrop-filter:blur(3px) }
       <div class="unit"><div id="m" class="value">00</div><div class="label">MINUTOS</div></div>
       <div class="unit"><div id="s" class="value">00</div><div class="label">SEGUNDOS</div></div>
     </div>
-  </div>  <dialog id="modal-mision">
+  </div>
+
+  <!-- Modal IZQUIERDO -->
+  <dialog id="modal-left">
     <div class="dialog-header">
-      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       <div style="font-weight:600;">Mensaje</div>
-      <button class="close-btn" onclick="modalMision.close()">Cerrar</button>
+      <button class="close-btn" onclick="document.getElementById('modal-left').close()">×</button>
     </div>
     <div class="dialog-body">
-      ¡Bienvenida a la semana de tu cumple! Que estés aquí ahora mismo quiere decir que estás haciendo las cosas bien, y has entendido lo importante que es esta página. Ahora tengo una misión para ti.<br><br>
-      Voy a necesitar que vayas pensando en:<br>
+      ¡Bienvenida de nuevo! Que estés aquí ahora mismo quiere decir que estás haciendo las cosas bien, y has entendido lo importante que es esta página. Ahora tengo una misión para ti.<br><br>
+      Voy a necesitar que prepares:<br>
       - DOS outfits (MUY importante que el mejor sea de noche)<br>
       - UN (o dos) BAÑADOR (importante: NO bikini, bañador).<br><br>
-      Pronto volverás a saber de mi. Sigue atenta <3
+      Pronto volverás a saber de mi. Sigue atenta.
     </div>
-  </dialog>  <dialog id="modal">
+  </dialog>
+
+  <!-- Modal DERECHO -->
+  <dialog id="modal-right">
     <div class="dialog-header">
-      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
       <div style="font-weight:600;">Mensaje</div>
-      <button class="close-btn" onclick="modal.close()">Cerrar</button>
+      <button class="close-btn" onclick="document.getElementById('modal-right').close()">×</button>
     </div>
     <div class="dialog-body">
       Es muuuuuy importante que, a partir de este mismo momento, entiendas lo importante que es esta página para el transcurso de los próximos días. Nos vemos pronto.
     </div>
-  </dialog>  <script>
-    function getTargetDate(){ const now=new Date(); const year=now.getFullYear(); const target=new Date(year,10,15,12,0,0,0); return now>target?new Date(year+1,10,15,12,0,0,0):target; }
-    const targetDate=getTargetDate();
-    const targetDate2=new Date(2025,10,8,12,0,0,0);
-    function getNextWednesdayNoon(){ const now=new Date(); const WED=3; let delta=(WED-now.getDay()+7)%7; const afterNoon=now.getHours()>12||(now.getHours()===12&&(now.getMinutes()>0||now.getSeconds()>0)); if(delta===0&&afterNoon) delta=7; const res=new Date(now); res.setDate(now.getDate()+delta); res.setHours(12,0,0,0); return res; }
-    const targetDate3=getNextWednesdayNoon();
+  </dialog>
 
-    const $d=document.getElementById('d'),$h=document.getElementById('h'),$m=document.getElementById('m'),$s=document.getElementById('s');
-    const $d2=document.getElementById('d2'),$h2=document.getElementById('h2'),$m2=document.getElementById('m2'),$s2=document.getElementById('s2');
-    const $d3=document.getElementById('d3'),$h3=document.getElementById('h3'),$m3=document.getElementById('m3'),$s3=document.getElementById('s3');
-    const miniRight=document.querySelector('.mini-count:not(.left)'), miniLeft=document.querySelector('.mini-count.left');
+  <!-- Modal MENÚ: Cerradura minimal -->
+  <dialog id="menuDialog">
+    <div class="dialog-header">
+      <div style="font-weight:600;">Introduce el código</div>
+      <button class="close-btn" onclick="document.getElementById('menuDialog').close()">×</button>
+    </div>
+    <div class="dialog-body">
+      <div class="tumbler-row">
+        <div class="tumbler" data-index="0" tabindex="0" aria-label="Primer dígito">
+          <div class="arrow" data-dir="up">▲</div>
+          <div class="digit-window"><span class="digit">0</span></div>
+          <div class="arrow" data-dir="down">▼</div>
+        </div>
+        <div class="tumbler" data-index="1" tabindex="0" aria-label="Segundo dígito">
+          <div class="arrow" data-dir="up">▲</div>
+          <div class="digit-window"><span class="digit">0</span></div>
+          <div class="arrow" data-dir="down">▼</div>
+        </div>
+        <div class="tumbler" data-index="2" tabindex="0" aria-label="Tercer dígito">
+          <div class="arrow" data-dir="up">▲</div>
+          <div class="digit-window"><span class="digit">0</span></div>
+          <div class="arrow" data-dir="down">▼</div>
+        </div>
+      </div>
+      <div>
+        <button id="checkLock" class="lock-btn">Desbloquear</button>
+        <span id="lockFeedback">Código incorrecto. Intenta otra vez.</span>
+      </div>
+    </div>
+  </dialog>
 
-    function pad(n,len=2){ return String(n).padStart(len,'0'); }
-    function updateBlock(diff,els,miniBox){ if(diff<=0){ els.d.textContent='00'; els.h.textContent='00'; els.m.textContent='00'; els.s.textContent='00'; if(miniBox) miniBox.classList.remove('soon'); return; } const s=Math.floor(diff/1000)%60,m=Math.floor(diff/1000/60)%60,h=Math.floor(diff/1000/60/60)%24,d=Math.floor(diff/1000/60/60/24); els.d.textContent=pad(d,Math.max(2,String(d).length)); els.h.textContent=pad(h); els.m.textContent=pad(m); els.s.textContent=pad(s); if(miniBox){ if(diff<24*60*60*1000) miniBox.classList.add('soon'); else miniBox.classList.remove('soon'); } }
-    function render(){ const now=new Date(); updateBlock(targetDate-now,{d:$d,h:$h,m:$m,s:$s}); updateBlock(targetDate2-now,{d:$d2,h:$h2,m:$m2,s:$s2},miniRight); updateBlock(targetDate3-now,{d:$d3,h:$h3,m:$m3,s:$s3},miniLeft); }
-    function tick(){ render(); const ms=1000-(Date.now()%1000); setTimeout(tick,ms+5); }
-    tick();
+  <!-- Modal MENSAJE final tras desbloqueo -->
+  <dialog id="finalMessage">
+    <div class="dialog-header">
+      <div style="font-weight:600;">¡Acceso concedido!</div>
+      <button class="close-btn" onclick="document.getElementById('finalMessage').close()">×</button>
+    </div>
+    <div class="dialog-body">
+      texto de prueba
+    </div>
+  </dialog>
 
-    const btnRight=document.querySelector('.help:not(.left)'), btnLeft=document.querySelector('.help.left');
-    const modal=document.getElementById('modal'), modalMision=document.getElementById('modal-mision');
-    const audio=document.getElementById('clickSound'), audioLeft=document.getElementById('clickSoundLeft');
+  <script>
+  "use strict";
+  (function(){
+    /* ===== Fechas objetivo ===== */
+    function nextNov15Noon(){ const now=new Date(); const y=now.getFullYear(); const t=new Date(y,10,15,12,0,0,0); return now>t?new Date(y+1,10,15,12,0,0,0):t; }
+    const targetMain   = nextNov15Noon();
+    const targetRight  = new Date(2025,10,8,12,0,0,0); // 8 nov 2025 12:00
+    function nextWednesdayNoon(){ const now=new Date(); const W=3; let d=(W-now.getDay()+7)%7; const after = now.getHours()>12 || (now.getHours()===12 && (now.getMinutes()>0 || now.getSeconds()>0)); if(d===0 && after) d=7; const r=new Date(now); r.setDate(now.getDate()+d); r.setHours(12,0,0,0); return r; }
+    const targetLeft   = nextWednesdayNoon();
 
-    if(btnRight) btnRight.addEventListener('click',()=>{ modal.showModal(); if(audio){ audio.currentTime=0; audio.play().catch(()=>{}); } });
-    if(btnLeft) btnLeft.addEventListener('click',()=>{ modalMision.showModal(); if(audioLeft){ audioLeft.currentTime=0; audioLeft.play().catch(()=>{}); } });
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(modal.open) modal.close(); if(modalMision.open) modalMision.close(); } });
-  </script></body>
+    /* ===== Utilidades ===== */
+    const pad = (n,len=2)=>String(n).padStart(len,'0');
+    function fill(diff, els, miniBox){
+      if(diff<=0){ els.d.textContent='00'; els.h.textContent='00'; els.m.textContent='00'; els.s.textContent='00'; if(miniBox) miniBox.classList.remove('soon'); return; }
+      const s=Math.floor(diff/1000)%60, m=Math.floor(diff/1000/60)%60, h=Math.floor(diff/1000/60/60)%24, d=Math.floor(diff/1000/60/60/24);
+      els.d.textContent = pad(d, Math.max(2, String(d).length));
+      els.h.textContent = pad(h);
+      els.m.textContent = pad(m);
+      els.s.textContent = pad(s);
+      if(miniBox){ if(diff < 24*60*60*1000) miniBox.classList.add('soon'); else miniBox.classList.remove('soon'); }
+    }
+
+    /* ===== Elementos ===== */
+    const $d = document.getElementById('d');
+    const $h = document.getElementById('h');
+    const $m = document.getElementById('m');
+    const $s = document.getElementById('s');
+    const $d2 = document.getElementById('d2');
+    const $h2 = document.getElementById('h2');
+    const $m2 = document.getElementById('m2');
+    const $s2 = document.getElementById('s2');
+    const $d3 = document.getElementById('d3');
+    const $h3 = document.getElementById('h3');
+    const $m3 = document.getElementById('m3');
+    const $s3 = document.getElementById('s3');
+    const miniRight = document.querySelector('.mini-count:not(.left)');
+    const miniLeft  = document.querySelector('.mini-count.left');
+
+    function render(){
+      const now=new Date();
+      fill(targetMain - now,  {d:$d,h:$h,m:$m,s:$s});
+      fill(targetRight - now, {d:$d2,h:$h2,m:$m2,s:$s2}, miniRight);
+      fill(targetLeft - now,  {d:$d3,h:$h3,m:$m3,s:$s3}, miniLeft);
+    }
+    (function loop(){ render(); const ms=1000-(Date.now()%1000); setTimeout(loop, ms+5); })();
+
+    /* ===== Interacciones + audio ===== */
+    const btnLeft  = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const modalLeft  = document.getElementById('modal-left');
+    const modalRight = document.getElementById('modal-right');
+    const audioLeft  = document.getElementById('audio-left');
+    const audioRight = document.getElementById('audio-right');
+
+    if(btnLeft)  btnLeft.addEventListener('click', ()=>{ modalLeft.showModal();  if(audioLeft){  audioLeft.currentTime=0;  audioLeft.play().catch(()=>{}); } });
+    if(btnRight) btnRight.addEventListener('click',()=>{ modalRight.showModal(); if(audioRight){ audioRight.currentTime=0; audioRight.play().catch(()=>{}); } });
+
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ if(modalLeft.open) modalLeft.close(); if(modalRight.open) modalRight.close(); if(menuDialog.open) menuDialog.close(); if(finalMessage.open) finalMessage.close(); } });
+
+    /* ===== Menú con cerradura (minimal 3 dígitos) ===== */
+    const menuBtn      = document.getElementById('menuBtn');
+    const menuDialog   = document.getElementById('menuDialog');
+    const finalMessage = document.getElementById('finalMessage');
+    const checkButton  = document.getElementById('checkLock');
+    const feedback     = document.getElementById('lockFeedback');
+
+    const SECRET_CODE = '836';
+    const wheels = [0,0,0];
+    const tumblerEls = Array.from(document.querySelectorAll('.tumbler'));
+
+    function setWheel(i, val){ wheels[i]=(val+10)%10; const d = tumblerEls[i].querySelector('.digit'); if(d) d.textContent=wheels[i]; }
+    tumblerEls.forEach((t,i)=>{ setWheel(i,0); const ups=t.querySelector('[data-dir="up"]'); const downs=t.querySelector('[data-dir="down"]'); ups.addEventListener('click',()=>setWheel(i,wheels[i]-1)); downs.addEventListener('click',()=>setWheel(i,wheels[i]+1)); });
+
+    if(menuBtn) menuBtn.addEventListener('click',()=>menuDialog.showModal());
+    if(checkButton) checkButton.addEventListener('click',()=>{ const code=wheels.join(''); if(code===SECRET_CODE){ menuDialog.close(); finalMessage.showModal(); } else { if(feedback){ feedback.style.display='inline-block'; setTimeout(()=>feedback.style.display='none',1500); } wheels.fill(0); tumblerEls.forEach((t,i)=>setWheel(i,0)); } });
+
+    /* ===== Tests sencillos ===== */
+    try{ console.assert($d&&$h&&$m&&$s,'Main countdown IDs missing'); console.assert($d2&&$h2&&$m2&&$s2,'Right mini-counter IDs missing'); console.assert($d3&&$h3&&$m3&&$s3,'Left mini-counter IDs missing'); console.log('%cChecks OK','color:green'); }catch(err){ console.error('Self-checks failed',err); }
+  })();
+  </script>
+</body>
 </html>
