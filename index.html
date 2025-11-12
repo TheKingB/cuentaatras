@@ -9,14 +9,10 @@
     :root{ --bg:#fbf9f6; --ink:#1a1a1a; --muted:#6b6b6b; --accent:#c49b66; --alert:#ff5b5b; --shadow:rgba(0,0,0,.08); }
     *{ box-sizing:border-box }
     html,body{ height:100%; margin:0 }
-    body{ background: radial-gradient(circle at 10% 10%, #ffffff 0%, var(--bg) 40%, #f7f3ee 100%); color:var(--ink); font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; display:grid; place-items:center }
+    body{ background: radial-gradient(circle at 10% 10%, #ffffff 0%, var(--bg) 40%, #f7f3ee 100%); color:var(--ink); font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; overflow:hidden }
 
-    /* ===== Contador principal ===== */
-    .wrap{ width:min(1100px,90vw); text-align:center; }
-    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:min(8vw,64px); align-items:end; justify-items:center }
-    .unit{ text-align:center }
-    .value{ font-family:"Cormorant Garamond", serif; font-weight:600; font-size:clamp(60px,14vw,160px); line-height:1; text-shadow:0 6px 18px var(--shadow) }
-    .label{ margin-top:20px; font-size:14px; letter-spacing:.3em; color:var(--muted) }
+    /* ===== Estructura general ===== */
+    .container{ display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; position:relative }
 
     /* ===== Iconos superiores (izq/dcha) ===== */
     .help{ position:fixed; top:20px; right:20px; width:60px; height:60px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s ease }
@@ -36,6 +32,18 @@
     .mini-count.soon .mini-label{ color:#fff }
     .mini-block{ text-align:center; min-width:40px }
 
+    /* ===== Icono del menú (cerradura) centrado y grande ===== */
+    .menu-btn{ position:absolute; top:50%; left:50%; transform:translate(-50%,-70%); width:160px; height:160px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .3s ease, filter .3s ease; z-index:6 }
+    .menu-btn:hover{ transform:translate(-50%,-70%) scale(1.1) }
+    .menu-btn img{ width:160px; height:160px; object-fit:contain; filter:drop-shadow(3px 3px 6px rgba(0,0,0,.2)) }
+
+    /* ===== Contador principal ===== */
+    .wrap{ width:min(1100px,90vw); text-align:center; position:relative; z-index:1; margin-top:120px }
+    .grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:min(8vw,64px); align-items:end; justify-items:center }
+    .unit{ text-align:center }
+    .value{ font-family:"Cormorant Garamond", serif; font-weight:600; font-size:clamp(60px,14vw,160px); line-height:1; text-shadow:0 6px 18px var(--shadow) }
+    .label{ margin-top:20px; font-size:14px; letter-spacing:.3em; color:var(--muted) }
+
     /* ===== Diálogos ===== */
     dialog{ border:2px solid #000; border-radius:10px; box-shadow:8px 8px 0 #000; background:#fff; max-width:600px; text-align:left; padding:0; animation:pop .3s ease forwards; overflow:hidden }
     @keyframes pop{ from{opacity:0; transform:translateY(20px) scale(.95)} to{opacity:1; transform:translateY(0) scale(1)} }
@@ -45,22 +53,23 @@
     .close-btn:hover{ color:var(--accent) }
     .dialog-body{ padding:24px 26px; font-size:18px; line-height:1.7; color:#222; text-align:center }
 
-    /* ===== Botón MENÚ (cerradura 3 dígitos) ===== */
-    .menu-btn{ position:fixed; bottom:20px; right:20px; width:70px; height:70px; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .2s ease }
-    .menu-btn:hover{ transform:scale(1.07) }
-    .menu-btn img{ width:60px; height:60px; object-fit:contain; filter:drop-shadow(2px 2px 0 #0003) }
-
     /* ===== Cerradura minimal ===== */
     #menuDialog{ border:none; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,.15); background:#fff; padding:0 }
-    #menuDialog .dialog-body{ padding-top:16px }
-    .tumbler-row{ display:flex; justify-content:center; gap:14px; margin:12px 0 16px }
-    .tumbler{ display:flex; flex-direction:column; align-items:center; background:#f2f2f2; border-radius:10px; padding:8px; width:60px; height:120px; justify-content:space-between }
-    .arrow{ cursor:pointer; font-size:18px; color:#555; user-select:none }
+    #menuDialog .dialog-body{ padding:26px 28px }
+    .tumbler-row{ display:flex; justify-content:center; gap:20px; margin:16px 0 22px }
+    .tumbler{ display:flex; flex-direction:column; align-items:center; background:#f1f1f1; border-radius:16px; padding:14px; width:90px; height:180px; justify-content:center; gap:14px; box-shadow:inset 0 2px 6px rgba(0,0,0,.06) }
+    .arrow{ display:grid; place-items:center; width:44px; height:36px; border-radius:8px; background:#e9e9e9; cursor:pointer; font-size:20px; color:#555; user-select:none; line-height:1; box-shadow:inset 0 1px 2px rgba(0,0,0,.08); transition:background .2s ease, transform .05s ease }
+    .arrow:hover{ background:#dddddd; color:#333 }
+    .arrow:active{ transform:translateY(1px) }
     .arrow:hover{ color:var(--accent) }
-    .digit-window{ display:grid; place-items:center; width:42px; height:54px; border-radius:8px; background:#fff; box-shadow:inset 0 2px 5px rgba(0,0,0,.1) }
-    .digit{ font-size:22px; font-weight:700; color:#333 }
-    .lock-btn{ padding:8px 14px; border:none; border-radius:8px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer }
-    #lockFeedback{ margin-left:10px; color:var(--alert); font-weight:700; display:none }
+    .digit-window{ display:grid; place-items:center; width:66px; height:92px; border-radius:12px; background:#fff; border:1px solid rgba(0,0,0,.08); box-shadow:inset 0 4px 10px rgba(0,0,0,.12) }
+    .digit{ font-size:44px; font-weight:800; color:#222; letter-spacing:.5px }
+    .lock-btn{ padding:12px 20px; border:none; border-radius:10px; background:var(--accent); color:#fff; font-weight:800; font-size:16px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,.12) }
+    #lockFeedback{ margin-left:12px; color:var(--alert); font-weight:700; display:none }
+
+    /* Mensaje dentro del diálogo del cerrojo */
+    .menu-hint{margin:0 0 18px 0; padding:18px 20px; background:rgba(255,255,255,.98); border:1px solid rgba(0,0,0,.08); border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,.10); font-size:18px; line-height:1.6; color:#2a2a2a; opacity:0; transition:opacity .45s ease}
+    .menu-hint.visible{opacity:1}
 
     /* ===== Responsive: evitar solapes ===== */
     @media (max-width:560px){
@@ -70,58 +79,61 @@
       .help{ width:50px; height:50px; top:12px }
       .help img{ width:40px; height:40px }
       .help-number{ width:20px; height:20px; font-size:12px }
-      /* Izquierda arriba */
       .help.left{ left:12px; right:auto; top:12px; z-index:4 }
       .mini-count.left{ left:66px; right:auto; top:12px; padding:6px 8px; gap:6px; z-index:3 }
-      /* Derecha debajo */
       .help:not(.left){ left:12px; right:auto; top:64px; z-index:4 }
       .mini-count:not(.left){ left:66px; right:auto; top:64px; padding:6px 8px; gap:6px; z-index:3 }
+      .menu-btn{ top:48%; width:132px; height:132px }
+      .menu-btn img{ width:132px; height:132px }
       dialog{ max-width:92vw }
     }
   </style>
 </head>
 <body>
+  <div class="container">
 
-  <!-- Mini-contador IZQUIERDO + botón -->
-  <div class="mini-count left" aria-label="Cuenta atrás Miércoles">
-    <div class="mini-block"><div id="d3" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
-    <div class="mini-block"><div id="h3" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
-    <div class="mini-block"><div id="m3" class="mini-val">00</div><span class="mini-label">MIN</span></div>
-    <div class="mini-block"><div id="s3" class="mini-val">00</div><span class="mini-label">SEG</span></div>
-  </div>
-  <button class="help left" id="btn-left" title="Misión">
-    <img src="notificacion.png" alt="Icono de documento" />
-    <span class="help-number">1</span>
-  </button>
-
-  <!-- Mini-contador DERECHO + botón -->
-  <div class="mini-count" aria-label="Cuenta atrás 8 de noviembre 2025">
-    <div class="mini-block"><div id="d2" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
-    <div class="mini-block"><div id="h2" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
-    <div class="mini-block"><div id="m2" class="mini-val">00</div><span class="mini-label">MIN</span></div>
-    <div class="mini-block"><div id="s2" class="mini-val">00</div><span class="mini-label">SEG</span></div>
-  </div>
-  <button class="help" id="btn-right" title="Ayuda">
-    <img src="notificacion.png" alt="Icono de documento" />
-  </button>
-
-  <!-- Botón MENÚ (cerradura 3 dígitos) -->
-  <button class="menu-btn" id="menuBtn" title="Abrir menú">
-    <img src="menu.png" alt="Icono menú" />
-  </button>
-
-  <!-- Audios -->
-  <audio id="audio-right" src="yaaaaa.mp3" preload="auto"></audio>
-  <audio id="audio-left"  src="amime.mp3"   preload="auto"></audio>
-
-  <!-- Contador principal centro -->
-  <div class="wrap">
-    <div id="countdown" class="grid" role="timer" aria-live="polite">
-      <div class="unit"><div id="d" class="value">00</div><div class="label">DÍAS</div></div>
-      <div class="unit"><div id="h" class="value">00</div><div class="label">HORAS</div></div>
-      <div class="unit"><div id="m" class="value">00</div><div class="label">MINUTOS</div></div>
-      <div class="unit"><div id="s" class="value">00</div><div class="label">SEGUNDOS</div></div>
+    <!-- Mini-contador IZQUIERDO + botón -->
+    <div class="mini-count left" aria-label="Cuenta atrás Miércoles">
+      <div class="mini-block"><div id="d3" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
+      <div class="mini-block"><div id="h3" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
+      <div class="mini-block"><div id="m3" class="mini-val">00</div><span class="mini-label">MIN</span></div>
+      <div class="mini-block"><div id="s3" class="mini-val">00</div><span class="mini-label">SEG</span></div>
     </div>
+    <button class="help left" id="btn-left" title="Misión">
+      <img src="notificacion.png" alt="Icono de documento" />
+      <span class="help-number">1</span>
+    </button>
+
+    <!-- Mini-contador DERECHO + botón -->
+    <div class="mini-count" aria-label="Cuenta atrás 8 de noviembre 2025">
+      <div class="mini-block"><div id="d2" class="mini-val">00</div><span class="mini-label">DÍAS</span></div>
+      <div class="mini-block"><div id="h2" class="mini-val">00</div><span class="mini-label">HORAS</span></div>
+      <div class="mini-block"><div id="m2" class="mini-val">00</div><span class="mini-label">MIN</span></div>
+      <div class="mini-block"><div id="s2" class="mini-val">00</div><span class="mini-label">SEG</span></div>
+    </div>
+    <button class="help" id="btn-right" title="Ayuda">
+      <img src="notificacion.png" alt="Icono de documento" />
+    </button>
+
+    <!-- Botón MENÚ (cerradura 3 dígitos) centrado y grande -->
+    <button class="menu-btn" id="menuBtn" title="Abrir cerradura">
+      <img src="menu.png" alt="Icono menú" />
+    </button>
+
+    <!-- Audios -->
+    <audio id="audio-right" src="yaaaaa.mp3" preload="auto"></audio>
+    <audio id="audio-left"  src="amime.mp3"   preload="auto"></audio>
+
+    <!-- Contador principal centro -->
+    <div class="wrap">
+      <div id="countdown" class="grid" role="timer" aria-live="polite">
+        <div class="unit"><div id="d" class="value">00</div><div class="label">DÍAS</div></div>
+        <div class="unit"><div id="h" class="value">00</div><div class="label">HORAS</div></div>
+        <div class="unit"><div id="m" class="value">00</div><div class="label">MINUTOS</div></div>
+        <div class="unit"><div id="s" class="value">00</div><div class="label">SEGUNDOS</div></div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Modal IZQUIERDO -->
@@ -131,10 +143,10 @@
       <button class="close-btn" onclick="document.getElementById('modal-left').close()">×</button>
     </div>
     <div class="dialog-body">
-      ¡Bienvenida de nuevo! Que estés aquí ahora mismo quiere decir que estás haciendo las cosas bien, y has entendido lo importante que es esta página. Ahora tengo una misión para ti.<br><br>
-      Voy a necesitar que prepares:<br>
-      - DOS outfits (MUY importante que el mejor sea de noche)<br>
-      - UN (o dos) BAÑADOR (importante: NO bikini, bañador).<br><br>
+      ¡Bienvenida de nuevo! Que estés aquí ahora mismo quiere decir que estás haciendo las cosas bien, y has entendido lo importante que es esta página.<br><br>
+      Lo segundo es que prepares 3 cosas:<br>
+      - 2 outfits (MUY importante que el mejor sea de noche)<br>
+      - 1 (o dos) BAÑADOR (importante: NO bikini, bañador).<br><br>
       Pronto volverás a saber de mi. Sigue atenta.
     </div>
   </dialog>
@@ -146,7 +158,7 @@
       <button class="close-btn" onclick="document.getElementById('modal-right').close()">×</button>
     </div>
     <div class="dialog-body">
-      Es muuuuuy importante que, a partir de este mismo momento, entiendas lo importante que es esta página para el transcurso de los próximos días. Nos vemos pronto.
+      Primero de todo, quedan 8 días, y es muuuuuy importante que, a partir de este mismo momento, entiendas lo importante que es esta página para su transcurso. Nos vemos pronto.
     </div>
   </dialog>
 
@@ -154,9 +166,10 @@
   <dialog id="menuDialog">
     <div class="dialog-header">
       <div style="font-weight:600;">Introduce el código</div>
-      <button class="close-btn" onclick="document.getElementById('menuDialog').close()">×</button>
+      <button class="close-btn" onclick="document.getElementById('menuDialog').close()" aria-label="Cerrar">×</button>
     </div>
     <div class="dialog-body">
+      <div id="menuHint" class="menu-hint">Tercer y último paso, ya casi estamos &lt;33. Este código desvela lo último que debes saber para el contador final. Tienes para adivinarlo hasta que se termine, pero no te preocupes que la solución la adivinas fácil, es de cajón. Ya casi estamos!!</div>
       <div class="tumbler-row">
         <div class="tumbler" data-index="0" tabindex="0" aria-label="Primer dígito">
           <div class="arrow" data-dir="up">▲</div>
@@ -188,7 +201,7 @@
       <button class="close-btn" onclick="document.getElementById('finalMessage').close()">×</button>
     </div>
     <div class="dialog-body">
-      texto de prueba
+      Muy bien hecho!!!! Has estado atenta como te pedí y eso te ha llevado hasta aquí, estoy muy orgulloso!! Como has podido intuir, no vamos a pasar ni el sabado, ni el domingo aquí, pero no te voy a contar más. Para el final del último contador, necesito que prepares todo lo que te he dicho en una mochila, cepillo de dientes, lentillas, líquido de lentillas... todo lo que necesites. Alguna pista de lo que vamos a vivir te he dado, aunque no te hayas dado cuenta. Vamos a disfrutar que te lo mereces más que nadie. Te amo mucho mucho!!! PD: Piensa tu outfit con algo dorado!!!!
     </div>
   </dialog>
 
@@ -254,6 +267,7 @@
     /* ===== Menú con cerradura (minimal 3 dígitos) ===== */
     const menuBtn      = document.getElementById('menuBtn');
     const menuDialog   = document.getElementById('menuDialog');
+    const menuHint     = document.getElementById('menuHint');
     const finalMessage = document.getElementById('finalMessage');
     const checkButton  = document.getElementById('checkLock');
     const feedback     = document.getElementById('lockFeedback');
@@ -265,11 +279,16 @@
     function setWheel(i, val){ wheels[i]=(val+10)%10; const d = tumblerEls[i].querySelector('.digit'); if(d) d.textContent=wheels[i]; }
     tumblerEls.forEach((t,i)=>{ setWheel(i,0); const ups=t.querySelector('[data-dir="up"]'); const downs=t.querySelector('[data-dir="down"]'); ups.addEventListener('click',()=>setWheel(i,wheels[i]-1)); downs.addEventListener('click',()=>setWheel(i,wheels[i]+1)); });
 
-    if(menuBtn) menuBtn.addEventListener('click',()=>menuDialog.showModal());
+    if(menuBtn) menuBtn.addEventListener('click',()=>{ menuDialog.showModal(); if(menuHint){ menuHint.classList.add('visible'); } });
     if(checkButton) checkButton.addEventListener('click',()=>{ const code=wheels.join(''); if(code===SECRET_CODE){ menuDialog.close(); finalMessage.showModal(); } else { if(feedback){ feedback.style.display='inline-block'; setTimeout(()=>feedback.style.display='none',1500); } wheels.fill(0); tumblerEls.forEach((t,i)=>setWheel(i,0)); } });
 
-    /* ===== Tests sencillos ===== */
-    try{ console.assert($d&&$h&&$m&&$s,'Main countdown IDs missing'); console.assert($d2&&$h2&&$m2&&$s2,'Right mini-counter IDs missing'); console.assert($d3&&$h3&&$m3&&$s3,'Left mini-counter IDs missing'); console.log('%cChecks OK','color:green'); }catch(err){ console.error('Self-checks failed',err); }
+    /* ===== Autotests simples ===== */
+    try{
+      console.assert($d&&$h&&$m&&$s,'Main countdown IDs');
+      console.assert($d2&&$h2&&$m2&&$s2,'Right mini-counter IDs');
+      console.assert($d3&&$h3&&$m3&&$s3,'Left mini-counter IDs');
+      console.log('%cUI restaurada + menú centrado','color:green');
+    }catch(e){ console.error('Self-checks failed', e); }
   })();
   </script>
 </body>
